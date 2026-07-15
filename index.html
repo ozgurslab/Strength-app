@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1f3a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Strength">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <title>Ozgur's Strength Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@300;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow">Resistance Training · GitHub Edition</div>
+    <h1><span id="profileName">Ozgur</span>’s Strength Dashboard <small>Log sets, review progress and manage every recommendation.</small></h1>
+    <div class="statline" id="profileStats"></div>
+  </header>
+
+  <nav class="tabs" aria-label="Dashboard sections">
+    <button class="tab on" data-tab="training">Training</button>
+    <button class="tab" data-tab="history">History</button>
+    <button class="tab" data-tab="recommendations">Recommended Weights</button>
+  </nav>
+
+  <section class="page on" id="page-training">
+    <section class="stats-grid" id="statsGrid"></section>
+    <section class="card">
+      <div class="card-head"><div><div class="eyebrow">Log a set</div><h2>Choose an exercise</h2></div><div class="date" id="todayLabel"></div></div>
+      <div class="selectors">
+        <label>Body part<select id="partSelect"></select></label>
+        <label>Equipment<select id="equipmentSelect"></select></label>
+      </div>
+      <div class="option-title">Available exercises and recommendations</div>
+      <div class="exercise-options" id="exerciseOptions"></div>
+      <div id="loggerCard"></div>
+    </section>
+  </section>
+
+  <section class="page" id="page-recommendations">
+    <section class="card">
+      <div class="card-head"><div><div class="eyebrow">Agent-editable</div><h2>Recommended Weights</h2></div></div>
+      <p class="intro">Edit any value here. Saved changes stay on this browser. To change source defaults for every user, update <code>recommendedKg</code> in <code>data.js</code>.</p>
+      <div class="toolbar">
+        <input id="recSearch" type="search" placeholder="Search exercise">
+        <button class="secondary" id="resetRecommendations">Reset source defaults</button>
+      </div>
+      <div id="recommendationsTable"></div>
+    </section>
+  </section>
+
+  <section class="page" id="page-history">
+    <section class="card">
+      <div class="card-head"><div><div class="eyebrow">Every saved set</div><h2>Training History</h2></div></div>
+      <div class="toolbar">
+        <button class="secondary" id="exportData">Export backup</button>
+        <label class="secondary file-label">Import backup<input type="file" id="importData" accept="application/json"></label>
+        <button class="danger" id="clearHistory">Clear history</button>
+      </div>
+      <div id="historyList"></div>
+    </section>
+  </section>
+
+  <footer>Data is stored locally in your browser. Dumbbell recommendations are per hand unless the exercise clearly uses one shared dumbbell.</footer>
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
