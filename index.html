@@ -1,28 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b1f3a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Strength">
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-  <link rel="manifest" href="manifest.json">
-  <title>Ozgur's Strength Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@300;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1f3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Strength">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="manifest" href="manifest.json">
+<title>Ozgur's Strength Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@300;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <main class="wrap">
   <header>
     <div class="eyebrow">Resistance Training · GitHub Edition</div>
-    <h1><span id="profileName">Ozgur</span>’s Strength Dashboard <small>Log sets, review progress and manage every recommendation.</small></h1>
+    <h1><span id="profileName">Ozgur</span>'s Strength Dashboard <small>Log sets, review progress and manage every recommendation.</small></h1>
     <div class="statline" id="profileStats"></div>
   </header>
 
@@ -39,6 +39,7 @@
       <div class="selectors">
         <label>Body part<select id="partSelect"></select></label>
         <label>Equipment<select id="equipmentSelect"></select></label>
+        <button class="secondary" id="addCustomExercise">+ Custom</button>
       </div>
       <div class="option-title">Available exercises and recommendations</div>
       <div class="exercise-options" id="exerciseOptions"></div>
@@ -72,6 +73,48 @@
 
   <footer>Data is stored locally in your browser. Dumbbell recommendations are per hand unless the exercise clearly uses one shared dumbbell.</footer>
 </main>
+
+<!-- Custom Exercise Modal -->
+<div id="customExerciseModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Add Custom Exercise</h2>
+      <button id="closeCustomExerciseModal" class="close-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <label>Body Part
+        <select id="customBodyPart">
+          <option value="legs">Legs</option>
+          <option value="back">Back</option>
+          <option value="chest">Chest</option>
+          <option value="arms">Arms</option>
+          <option value="shoulders">Shoulders</option>
+        </select>
+      </label>
+      <label>Equipment
+        <select id="customEquipment">
+          <option value="free">Weights</option>
+          <option value="cable">Cable</option>
+          <option value="machine">Machine</option>
+        </select>
+      </label>
+      <label>Exercise Name
+        <input type="text" id="customExerciseName" placeholder="e.g., Landmine Press">
+      </label>
+      <label>Target Reps/Sets
+        <input type="text" id="customExerciseTarget" placeholder="e.g., 3 × 12">
+      </label>
+      <label>Recommended Weight (kg)
+        <input type="number" step="0.5" id="customRecommendedKg" placeholder="0">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button id="saveCustomExerciseBtn" class="primary">Add Exercise</button>
+      <button class="secondary" id="closeCustomExerciseBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
