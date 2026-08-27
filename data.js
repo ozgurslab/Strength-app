@@ -1,8 +1,8 @@
 /* ============================================================
    EDITABLE TRAINING DATA
    Claude or another coding agent can safely update this file.
-   Change recommendedKg values without touching app.js.
-   Dumbbell recommendations are per hand unless noted otherwise.
+   Change peakKg values (max weight for 3 reps) without touching app.js.
+   Dumbbell peak weights are per hand unless noted otherwise.
    ============================================================ */
 window.STRENGTH_DATA = {
   profile: { name: 'Ozgur', age: 53, bodyweightKg: 77, heightCm: 173, bodyFat: '~15%' },
@@ -32,8 +32,8 @@ window.STRENGTH_DATA = {
     ['machine','chest','Chest Press',75,'3 × 10–15'],['machine','chest','Pec Deck',35,'2 × 12–15'],
     ['machine','arms','Biceps Curl (Machine)',25,'3 × 10–12'],['machine','arms','Triceps Extension (Machine)',30,'3 × 10–12'],
     ['machine','shoulders','Shoulder Press (Machine)',55,'3 × 10–12'],['machine','shoulders','Lateral Raise (Machine)',25,'2 × 12–15'],['machine','shoulders','Rear-Delt (Machine)',25,'3 × 15']
-  ].map(([equipment, bodyPart, name, recommendedKg, target]) => ({
+  ].map(([equipment, bodyPart, name, peakKg, target]) => ({
     id: `${equipment}_${bodyPart}_${name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`,
-    equipment, bodyPart, name, recommendedKg, target
+    equipment, bodyPart, name, peakKg, target
   }))
 };

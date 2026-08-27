@@ -21,27 +21,32 @@
 <body>
 <main class="wrap">
   <header>
-    <div class="eyebrow">Resistance Training · GitHub Edition</div>
-    <h1><span id="profileName">Ozgur</span>'s Strength Dashboard <small>Log sets, review progress and manage every recommendation.</small></h1>
-    <div class="statline" id="profileStats"></div>
+    <div class="header-top">
+      <div>
+        <div class="eyebrow">Strength Training</div>
+        <h1><span id="profileName">Ozgur</span>'s Dashboard</h1>
+        <div class="statline compact" id="profileStats"></div>
+      </div>
+      <img src="icon-192.png" alt="App icon" class="app-icon">
+    </div>
   </header>
 
   <nav class="tabs" aria-label="Dashboard sections">
     <button class="tab on" data-tab="training">Training</button>
     <button class="tab" data-tab="history">History</button>
-    <button class="tab" data-tab="recommendations">Recommended Weights</button>
+    <button class="tab" data-tab="recommendations">Peak Weights</button>
   </nav>
 
   <section class="page on" id="page-training">
-    <section class="stats-grid" id="statsGrid"></section>
+    <section class="card stats-card" id="statsGrid"></section>
     <section class="card">
-      <div class="card-head"><div><div class="eyebrow">Log a set</div><h2>Choose an exercise</h2></div><div class="date" id="todayLabel"></div></div>
+      <div class="card-head"><div class="eyebrow">Log a set</div><div class="date" id="todayLabel"></div></div>
       <div class="selectors">
         <label>Body part<select id="partSelect"></select></label>
         <label>Equipment<select id="equipmentSelect"></select></label>
-        <button class="secondary" id="addCustomExercise">+ Custom</button>
+        <button class="secondary small" id="addCustomExercise">+ Custom</button>
       </div>
-      <div class="option-title">Available exercises and recommendations</div>
+      <div class="option-title">Available exercises</div>
       <div class="exercise-options" id="exerciseOptions"></div>
       <div id="loggerCard"></div>
     </section>
@@ -49,11 +54,11 @@
 
   <section class="page" id="page-recommendations">
     <section class="card">
-      <div class="card-head"><div><div class="eyebrow">Agent-editable</div><h2>Recommended Weights</h2></div></div>
-      <p class="intro">Edit any value here. Saved changes stay on this browser. To change source defaults for every user, update <code>recommendedKg</code> in <code>data.js</code>.</p>
+      <div class="card-head"><div class="eyebrow">Athlete-editable</div><h2>Peak Weights (3RM)</h2></div>
+      <p class="intro">Edit peak weight for any exercise. To change source defaults, update <code>peakKg</code> in <code>data.js</code>.</p>
       <div class="toolbar">
         <input id="recSearch" type="search" placeholder="Search exercise">
-        <button class="secondary" id="resetRecommendations">Reset source defaults</button>
+        <button class="secondary small" id="resetRecommendations">Reset defaults</button>
       </div>
       <div id="recommendationsTable"></div>
     </section>
@@ -61,17 +66,17 @@
 
   <section class="page" id="page-history">
     <section class="card">
-      <div class="card-head"><div><div class="eyebrow">Every saved set</div><h2>Training History</h2></div></div>
+      <div class="card-head"><div class="eyebrow">Training log</div><h2>History</h2></div>
       <div class="toolbar">
-        <button class="secondary" id="exportData">Export backup</button>
-        <label class="secondary file-label">Import backup<input type="file" id="importData" accept="application/json"></label>
-        <button class="danger" id="clearHistory">Clear history</button>
+        <button class="secondary small" id="exportData">Export</button>
+        <label class="secondary small file-label">Import<input type="file" id="importData" accept="application/json"></label>
+        <button class="danger small" id="clearHistory">Clear</button>
       </div>
       <div id="historyList"></div>
     </section>
   </section>
 
-  <footer>Data is stored locally in your browser. Dumbbell recommendations are per hand unless the exercise clearly uses one shared dumbbell.</footer>
+  <footer>Data stored locally. Dumbbell weights are per hand unless noted.</footer>
 </main>
 
 <!-- Custom Exercise Modal -->
@@ -104,7 +109,7 @@
       <label>Target Reps/Sets
         <input type="text" id="customExerciseTarget" placeholder="e.g., 3 × 12">
       </label>
-      <label>Recommended Weight (kg)
+      <label>Peak Weight (3RM, kg)
         <input type="number" step="0.5" id="customRecommendedKg" placeholder="0">
       </label>
     </div>
