@@ -151,12 +151,15 @@
     
     $('historyList').innerHTML=Object.entries(grouped).map(([date,byBodyPart])=>{
       const dayHtml = Object.entries(byBodyPart).map(([bp,items])=>{
-        return `<div class="history-section">
-          <h4 class="bp-label">${DATA.bodyParts.find(p=>p.id===bp)?.label||bp}</h4>
-          ${items.map(l=>`<div class="history-entry"><strong>${l.exerciseName}</strong><p>${l.sets.map(s=>\`\${s.weightKg??'—'} kg × \${s.reps??'—'}\`).join(' · ')}</p><button class="history-delete" onclick="window.deleteLog('\${l.id}')">Delete</button></div>`).join('')}
-        </div>`;
+        const entriesHtml = items.map(l=>{
+          const setsText = l.sets.map(s=>(s.weightKg??'—')+' kg × '+(s.reps??'—')).join(' · ');
+          return '<div class="history-entry"><strong>'+l.exerciseName+'</strong><p>'+setsText+'</p><button class="history-delete" onclick="window.deleteLog(\''+l.id+'\')">Delete</button></div>';
+        }).join('');
+        const bpLabel = DATA.bodyParts.find(p=>p.id===bp);
+        return '<div class="history-section"><h4 class="bp-label">'+(bpLabel?bpLabel.label:bp)+'</h4>'+entriesHtml+'</div>';
       }).join('');
-      return `<div class="history-day"><h3>${new Date(date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</h3>${dayHtml}</div>`;
+      const dayLabel = new Date(date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+      return '<div class="history-day"><h3>'+dayLabel+'</h3>'+dayHtml+'</div>';
     }).join('');
   }
   
