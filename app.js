@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  let DATA = window.STRENGTH_DATA;
+  const DATA = window.STRENGTH_DATA;
   const KEYS = { logs:'strength_v2_logs', recs:'strength_v2_recommendations', custom:'strength_v2_custom_exercises' };
   const $ = id => document.getElementById(id);
   const safeParse = (raw, fallback) => { try { return raw ? JSON.parse(raw) : fallback; } catch { return fallback; } };
@@ -11,13 +11,13 @@
     if(custom.length) DATA.exercises = [...DATA.exercises, ...custom];
   }
   
-  const sourceRecommendations = Object.fromEntries(DATA.exercises.map(e => [e.id, e.peakKg]));
+  const sourceRecommendations = Object.fromEntries(DATA.exercises.map(e => [e.id, e.recommendedKg]));
   let recommendations = {...sourceRecommendations, ...safeParse(localStorage.getItem(KEYS.recs), {})};
   let logs = safeParse(localStorage.getItem(KEYS.logs), []);
   let selectedEquipment = DATA.equipment[0].id;
   let selectedPart = DATA.bodyParts[0].id;
   let selectedExerciseId = null;
-  let currentSets = []; // Track sets being edited
+  let currentSets = [];
 
   function saveState(){ localStorage.setItem(KEYS.logs, JSON.stringify(logs)); localStorage.setItem(KEYS.recs, JSON.stringify(recommendations)); }
   function saveCustomExercises(){ localStorage.setItem(KEYS.custom, JSON.stringify(DATA.exercises.filter(e => e.isCustom))); }
@@ -48,11 +48,9 @@
     document.querySelectorAll('.exercise-option').forEach(b=>b.addEventListener('click',()=>{selectedExerciseId=b.dataset.id; refreshExercises();}));
     renderLogger();
   }
-  
   function renderLogger(){
     const ex=selectedExercise(); if(!ex){$('loggerCard').innerHTML='';return;}
     const last=latestLog(ex.id); 
-    // Load prior sets or initialize empty
     currentSets = last?.sets ? [...last.sets] : [];
     
     const rows=Array.from({length:3},(_,i)=>{
@@ -75,7 +73,6 @@
     $('editCurrentRecommendation').addEventListener('click',()=>openRecommendation(ex.id));
   }
   
-  // Global delete function
   window.deleteSet = function(index){
     currentSets.splice(index, 1);
     renderLogger();
@@ -88,7 +85,6 @@
   
   function saveSets(){
     const ex=selectedExercise();
-    // Sync currentSets from DOM
     for(let i=0; i<currentSets.length; i++){
       const w = $(`w${i}`);
       const r = $(`r${i}`);
@@ -101,12 +97,10 @@
         };
       }
     }
-    // Filter empty sets
     const sets = currentSets.filter(s => Number.isFinite(s.weightKg) || Number.isFinite(s.reps));
     
     if(!sets.length){$('saveStatus').textContent='Enter at least one set.';return;}
     
-    // SAME-DAY OVERWRITE: Check if exercise logged today
     const today = getTodayISO();
     const existingIndex = logs.findIndex(l => {
       const logDate = new Date(l.timestamp).toISOString().slice(0,10);
@@ -116,9 +110,9 @@
     const newLog = {id:`log_${Date.now()}`,timestamp:Date.now(),exerciseId:ex.id,exerciseName:ex.name,equipment:ex.equipment,bodyPart:ex.bodyPart,sets};
     
     if(existingIndex !== -1){
-      logs[existingIndex] = newLog; // OVERWRITE today's entry
+      logs[existingIndex] = newLog;
     } else {
-      logs.push(newLog); // NEW entry
+      logs.push(newLog);
     }
     
     currentSets = [];
@@ -177,14 +171,11 @@
   function exportBackup(){ const blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),logs,recommendations},null,2)],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`strength-backup-${getTodayISO()}.json`;a.click();URL.revokeObjectURL(a.href); }
   async function importBackup(file){ const obj=safeParse(await file.text(),null); if(!obj||!Array.isArray(obj.logs)) return alert('Invalid backup file.'); logs=obj.logs; recommendations={...sourceRecommendations,...(obj.recommendations||{})}; saveState(); renderStats(); renderHistory(); renderRecommendations(); refreshExercises(); alert('Backup imported.'); }
   
-  // CUSTOM EXERCISES MODAL
   function openCustomExerciseModal(){
     const modal = $('customExerciseModal');
     if(!modal) return;
-    const bp = selectedPart;
-    const eq = selectedEquipment;
-    $('customBodyPart').value = bp;
-    $('customEquipment').value = eq;
+    $('customBodyPart').value = selectedPart;
+    $('customEquipment').value = selectedEquipment;
     $('customExerciseName').value = '';
     $('customExerciseTarget').value = '';
     $('customRecommendedKg').value = '';
@@ -201,16 +192,16 @@
     const bodyPart = $('customBodyPart').value;
     const equipment = $('customEquipment').value;
     const target = $('customExerciseTarget').value.trim() || '3 × 12';
-    const peakKg = parseFloat($('customRecommendedKg').value) || 0;
+    const recommendedKg = parseFloat($('customRecommendedKg').value) || 0;
     
     if(!name) { alert('Please enter an exercise name.'); return; }
     
     const id = `${equipment}_${bodyPart}_${name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
-    const newEx = { id, equipment, bodyPart, name, peakKg, target, isCustom: true };
+    const newEx = { id, equipment, bodyPart, name, recommendedKg, target, isCustom: true };
     
     DATA.exercises.push(newEx);
-    sourceRecommendations[id] = peakKg;
-    recommendations[id] = peakKg;
+    sourceRecommendations[id] = recommendedKg;
+    recommendations[id] = recommendedKg;
     
     saveCustomExercises();
     saveState();
@@ -226,7 +217,6 @@
     $('importData').addEventListener('change',e=>{if(e.target.files[0])importBackup(e.target.files[0]);});
     $('clearHistory').addEventListener('click',()=>{if(confirm('Clear all history?')){logs=[];saveState();renderStats();renderHistory();}});
     
-    // Custom exercise modal
     const addCustomBtn = $('addCustomExercise');
     if(addCustomBtn) addCustomBtn.addEventListener('click', openCustomExerciseModal);
     
